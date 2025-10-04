@@ -7,11 +7,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float speed = 5;
     [SerializeField]
-    private float sprintSpeed = 10;
-    private bool sprinting = false;
+    private float sprintSpeedMult = 2.0f;
+    public bool sprinting = false;
+    public bool menuing = false;
+    public bool steering = false;
     private bool interacting = false;
     private Interactable interactTarget;
     private float interactProgress = 0.0f;
+    [SerializeField]
+    private float interactSpeedMult = 0.4f;
 
     private void Awake()
     {
@@ -21,17 +25,25 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         inputDir = Vector3.zero;
-        if (Input.GetKey(KeyCode.W)) inputDir.z += 1;
-        if (Input.GetKey(KeyCode.S)) inputDir.z -= 1;
-        if (Input.GetKey(KeyCode.A)) inputDir.x -= 1;
-        if (Input.GetKey(KeyCode.D)) inputDir.x += 1;
-        sprinting = Input.GetKey(KeyCode.LeftShift);
-        interacting = Input.GetKey(KeyCode.Space);
+        if (!menuing)
+        {
+            if (Input.GetKey(KeyCode.W)) inputDir.z += 1;
+            if (Input.GetKey(KeyCode.S)) inputDir.z -= 1;
+            if (Input.GetKey(KeyCode.A)) inputDir.x -= 1;
+            if (Input.GetKey(KeyCode.D)) inputDir.x += 1;
+        }
+        sprinting = Input.GetKey(KeyCode.LeftShift) && !menuing;
+        interacting = Input.GetKey(KeyCode.Space) && !menuing;
     }
 
     private void FixedUpdate()
     {
-        rb.linearVelocity = inputDir.normalized * (sprinting ? sprintSpeed : speed);
+        float stateSpeedMult = 1.0f;
+        if (steering) stateSpeedMult = 0.0f;
+        else if (interacting && interactTarget != null) stateSpeedMult = interactSpeedMult;
+        else if (sprinting) stateSpeedMult = sprintSpeedMult;
+
+        rb.linearVelocity = inputDir.normalized * (speed * stateSpeedMult);
         if(interacting && interactTarget != null)
         {
             interactProgress += 1.0f * Time.deltaTime;
