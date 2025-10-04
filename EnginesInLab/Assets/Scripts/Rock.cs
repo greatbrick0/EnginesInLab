@@ -33,4 +33,9 @@ public class Rock : Interactable, INaturalResource
         oreQuantity = newQuantity;
         oreType = newOreType;
     }
+
+    public void ApplyMaterial(Material newMaterial)
+    {
+        GetComponent<OreMaterialApplier>().ApplyMaterial(newMaterial);
+    }
 }

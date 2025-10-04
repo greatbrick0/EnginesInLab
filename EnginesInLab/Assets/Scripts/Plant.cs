@@ -52,4 +52,9 @@ public class Plant : Interactable, INaturalResource
         oreQuantity = newQuantity;
         oreType = newOreType;
     }
+
+    public void ApplyMaterial(Material newMaterial)
+    {
+        GetComponent<OreMaterialApplier>().ApplyMaterial(newMaterial);
+    }
 }

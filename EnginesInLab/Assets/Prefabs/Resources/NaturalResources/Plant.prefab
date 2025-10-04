@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5838209556432102096}
   - component: {fileID: 6925820825797059530}
   - component: {fileID: 3304838952516202666}
+  - component: {fileID: 9139392152669513052}
   m_Layer: 6
   m_Name: Plant
   m_TagString: Untagged
@@ -75,6 +76,19 @@ MonoBehaviour:
   <oreQuantity>k__BackingField: 10
   plantBody: {fileID: 2473455581684365521}
   regenDuration: 2
+--- !u!114 &9139392152669513052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3224410680155624135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abd53038d9e68ef4291fd6de17f9a20d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OreMaterialApplier
+  mesh: {fileID: 322634883675036825}
 --- !u!1 &7451016706270119143
 GameObject:
   m_ObjectHideFlags: 0
