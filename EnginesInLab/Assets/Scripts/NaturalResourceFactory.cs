@@ -9,7 +9,8 @@ public class NaturalResourceFactory
         resources = new List<GameObject>()
         {
             Resources.Load<GameObject>("NaturalResources/Rock"),
-            Resources.Load<GameObject>("NaturalResources/Plant")
+            Resources.Load<GameObject>("NaturalResources/Plant"),
+            Resources.Load<GameObject>("NaturalResources/Puddle"),
         };
     }
 
