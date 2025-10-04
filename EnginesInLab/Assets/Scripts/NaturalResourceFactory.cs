@@ -3,14 +3,19 @@ using UnityEngine;
 
 public class NaturalResourceFactory
 {
-    public static List<GameObject> resources = new List<GameObject>() 
+    public static List<GameObject> resources;
+    public NaturalResourceFactory()
     {
-        Resources.Load<GameObject>("Prefabs/NaturalResources/Rock"),
-        Resources.Load<GameObject>("Prefabs/NaturalResources/Plant")
-    };
+        resources = new List<GameObject>()
+        {
+            Resources.Load<GameObject>("NaturalResources/Rock"),
+            Resources.Load<GameObject>("NaturalResources/Plant")
+        };
+    }
 
-    public static void CreateNaturalResource()
+    public void CreateNaturalResource(Transform owner, int resourceTypeIndex, Vector3 newPos, int newQuantity, OreTypes newOreType)
     {
-
+        GameObject resourceRef = Object.Instantiate(resources[resourceTypeIndex], owner);
+        resourceRef.GetComponent<INaturalResource>().SpawnResource(newPos, newQuantity, newOreType);
     }
 }

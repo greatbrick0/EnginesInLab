@@ -38,13 +38,16 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        bool interactSuccess = false;
+        if (interacting && interactTarget != null) interactSuccess = interactTarget.available;
+
         float stateSpeedMult = 1.0f;
         if (steering) stateSpeedMult = 0.0f;
-        else if (interacting && interactTarget != null) stateSpeedMult = interactSpeedMult;
+        else if (interactSuccess) stateSpeedMult = interactSpeedMult;
         else if (sprinting) stateSpeedMult = sprintSpeedMult;
 
         rb.linearVelocity = inputDir.normalized * (speed * stateSpeedMult);
-        if(interacting && interactTarget != null)
+        if(interactSuccess)
         {
             interactProgress += 1.0f * Time.deltaTime;
             if(interactProgress >= interactTarget.interactDuration)

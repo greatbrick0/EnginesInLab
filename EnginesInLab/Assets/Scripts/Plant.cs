@@ -30,6 +30,7 @@ public class Plant : Interactable, INaturalResource
             plantBody.localScale = Vector3.one * ((float)oreQuantity / fullQuantity);
         }
         available = true;
+        AudioManager.instance.PlaySoundByIndex(2);
     }
 
     public override void Interact()
@@ -45,7 +46,10 @@ public class Plant : Interactable, INaturalResource
 
     public void SpawnResource(Vector3 newPos, int newQuantity, OreTypes newOreType)
     {
+        transform.position = newPos;
+        transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
         fullQuantity = newQuantity;
         oreQuantity = newQuantity;
+        oreType = newOreType;
     }
 }
