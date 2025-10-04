@@ -10,6 +10,6 @@ Singleton Diagram:
 
 ![Flow Chart](GameEnginesFlowChart-2025-09-192.png)
 
-Factory Paattern Diagram:
+Factory Pattern Diagram:
 
 ![Flow Chart](GameEnginesFlowChart-2025-10-03.png)
