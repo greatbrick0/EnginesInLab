@@ -3,7 +3,10 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody rb;
+    public Vehicle currentVehicle { get; private set; } = null;
     private Vector3 inputDir;
+    public delegate void PlayerInputEvent(Vector3 vec, bool sprint, bool interact);
+    public PlayerInputEvent playerInputEvent;
     [SerializeField]
     private float speed = 5;
     [SerializeField]
@@ -20,6 +23,8 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        playerInputEvent += CharacterMove;
+        playerInputEvent += CharacterManualInteract;
     }
 
     void Update()
@@ -38,23 +43,70 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(playerInputEvent != null)
+        {
+            playerInputEvent.Invoke(inputDir, sprinting, interacting);
+        }
+    }
+
+    private void CharacterMove(Vector3 vec, bool sprint, bool interact)
+    {
         bool interactSuccess = false;
-        if (interacting && interactTarget != null) interactSuccess = interactTarget.available;
+        if (interact && interactTarget != null) interactSuccess = interactTarget.available;
 
         float stateSpeedMult = 1.0f;
-        if (steering) stateSpeedMult = 0.0f;
-        else if (interactSuccess) stateSpeedMult = interactSpeedMult;
-        else if (sprinting) stateSpeedMult = sprintSpeedMult;
+        if (interactSuccess) stateSpeedMult = interactSpeedMult;
+        else if (sprint) stateSpeedMult = sprintSpeedMult;
 
-        rb.linearVelocity = inputDir.normalized * (speed * stateSpeedMult);
-        if(interactSuccess)
+        rb.MovePosition(transform.position + (transform.forward * vec.z + transform.right * vec.x).normalized * (speed * stateSpeedMult) * Time.deltaTime);
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        if (currentVehicle != null)
+        {
+            rb.linearVelocity += currentVehicle.rb.linearVelocity;
+            rb.angularVelocity = currentVehicle.rb.angularVelocity;
+        }
+    }
+
+    private void CharacterBuckled(Vector3 vec, bool sprint, bool interact)
+    {
+        rb.linearVelocity = currentVehicle.rb.linearVelocity;
+        rb.angularVelocity = currentVehicle.rb.angularVelocity;
+    }
+
+    private void CharacterManualInteract(Vector3 vec, bool sprint, bool interact)
+    {
+        bool interactSuccess = false;
+        if (interact && interactTarget != null) interactSuccess = interactTarget.available;
+
+        if (interactSuccess)
         {
             interactProgress += 1.0f * Time.deltaTime;
-            if(interactProgress >= interactTarget.interactDuration)
+            if (interactProgress >= interactTarget.interactDuration)
             {
                 interactTarget.Interact();
                 interactProgress = 0.0f;
             }
+        }
+    }
+
+    public void SetCurrentVehicle(Vehicle newVehicle)
+    {
+        currentVehicle = newVehicle;
+    }
+
+    public void SetSteering(bool newSteering)
+    {
+        steering = newSteering;
+        if(steering)
+        {
+            playerInputEvent -= CharacterMove;
+            playerInputEvent += CharacterBuckled;
+        }
+        else
+        {
+            playerInputEvent += CharacterMove;
+            playerInputEvent -= CharacterBuckled;
         }
     }
 
