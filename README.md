@@ -20,7 +20,7 @@ Observer Pattern:
 
 To see this pattern in practice:
 1. Find a car, one of them is directly down from the spawn location.
-2. Enter the car by interacting with the cylinder that is on the edge of the car.
+2. Enter the car by interacting with the cylinder that is on the edge of the car. (Hold down space to interact!)
 3. Start driving by interacting with the cylinder that is in the centre front of the car.
    
 The player's inputs are broadcast as an event that can be listened to by multiple sources. By default this is the player's own movement, however if you enter a car and start driving the player's movement stops observing and the car's movement starts observing instead. 
